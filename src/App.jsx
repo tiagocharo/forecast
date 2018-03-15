@@ -26,7 +26,8 @@ export default class App extends Component {
     this.fetchBackgroundPage();
 
     /*verifiry localization*/
-    if (navigator.geolocation) {
+    if(navigator.geolocation) {
+      debugger;
       navigator.geolocation.getCurrentPosition(this.successFunction.bind(this));
     } else {
       alert('Parece que a Geolocalização, que é necessária para esta página, não está ativada no seu navegador.');
@@ -137,7 +138,7 @@ export default class App extends Component {
             text="Amanhã"/>
           <Text 
             className="white temperatures"
-            text={ `Máxima: ${forecast.maxTommorrow}ºC - Mínima: ${forecast.minTommorrow}ºC` } />
+            text={ `Máxima: ${forecast.maxTommorrow}ºC | Mínima: ${forecast.minTommorrow}ºC` } />
         </div>
         <div className={`container box-after-tommorrow ${ Utils.getClassName(forecast.maxAfterTommorrow) }`}>
           <Text 
@@ -145,7 +146,7 @@ export default class App extends Component {
             text="Depois de amanhã"/>
           <p 
             className="white temperatures">
-            { `Máxima: ${forecast.maxAfterTommorrow}ºC - Mínima: ${forecast.minAfterTommorrow}ºC` }
+            { `Máxima: ${forecast.maxAfterTommorrow}ºC | Mínima: ${forecast.minAfterTommorrow}ºC` }
           </p>
         </div>
       </div>
@@ -154,6 +155,7 @@ export default class App extends Component {
       :  
         <div className="divImage">
           <img src={loading} />
+          <p><b>Sua localização precisa estar ativada.</b></p>
         </div>
     );
   }
