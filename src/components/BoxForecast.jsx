@@ -7,8 +7,7 @@ export default class BoxForecast extends Component {
             <div className="white forecast-container">
                 <p className="white box-forecast">Hoje</p>
                 <p
-                 className="white temperatures"
-                 onClick={this.props.onClick}>{ this.props.celsius ? `${this.props.today}ºF ` : `${this.props.today}ºC ` }</p>
+                 className="white temperatures">{ `Máxima: ${this.props.data.maxToday}ºC - Mínima: ${this.props.data.minToday}ºC` }</p>
                 <p className="white forecast-title">{ Utils.getCondition(this.props.data.condition.toLowerCase()) }</p>
                 <p className="white wind">{`Vento: ${this.props.data.windCurrent}Km/h`}</p>
                 <p className="white humidity">{`Humidade: ${this.props.data.humidityCurrent}%`}</p>

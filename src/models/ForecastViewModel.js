@@ -7,18 +7,17 @@ export default class ForecastViewModel {
         this.windCurrent = item.wind.speed;
         this.humidityCurrent = item.atmosphere.humidity;
         this.pressureCurrent = item.atmosphere.pressure;
-        this.tempToday = item.item.condition.temp;
-        this.temperatures = this.getTemperatures(item.item.forecast);
+        this.maxToday = this.toCelsius(item.item.forecast[0].high);
+        this.minToday = this.toCelsius(item.item.forecast[0].low);
+        this.maxTommorrow = this.toCelsius(item.item.forecast[1].high);
+        this.minTommorrow = this.toCelsius(item.item.forecast[1].low);
+        this.maxAfterTommorrow = this.toCelsius(item.item.forecast[2].high);
+        this.minAfterTommorrow = this.toCelsius(item.item.forecast[2].low);
+        
 console.log(response)
     }
 
-    getTemperatures(response) {
-        let temperatures = [];
-        
-        for (var i = 0; i < 3; i++) {
-            temperatures.push(Math.round((parseInt(response[i].high) + parseInt(response[i].low)) / 2))
-        }
-
-        return temperatures;
+    toCelsius(temperature) {
+        return Math.round(((parseFloat(temperature) - 32) * 5) / 9);
     }
 }

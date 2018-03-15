@@ -148,3 +148,18 @@ body {
 .white {
   color: #fff;
 }
+
+@media screen and (max-width: 900px){
+  * {
+    font-size: 10px;
+  }
+  .main-box {
+    width: 90%;
+  }
+  .text-input {
+    width: 23vw;
+  }
+  .image-forecast img {
+    height: 15vh;
+  }
+}

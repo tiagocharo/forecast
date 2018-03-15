@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './App.css';
+import './app.css';
 import Text from './components/Text';
 import ForecastViewModel from './models/ForecastViewModel';
 import Utils from './utils/Utils';
@@ -29,9 +29,21 @@ export default class App extends Component {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(this.successFunction.bind(this));
     } else {
-      alert('It seems like Geolocation, which is required for this page, is not enabled in your browser. Please use a browser which supports it.');
+      alert('Parece que a Geolocalização, que é necessária para esta página, não está ativada no seu navegador.');
     }
   }
+
+  componentDidUpdate() {
+    if(this.state.willMount) {
+      this.app.addEventListener('keydown', (event) => {
+        if(event.keyCode === 13) {
+          console.log('enter')
+          this.fetchForecast()
+        }
+      })
+    }
+  }
+
   /*fetch actually localization*/
   successFunction(position) {
     let lat = position.coords.latitude;
@@ -41,12 +53,11 @@ export default class App extends Component {
       .then(response => response.json())
       .then(response => {
         const forecast = new ForecastViewModel(response);
+
         this.setState({
           forecast: forecast,
           willMount: true
         })
-
-        this.toggleTemperature(this.state.forecast.temperatures);
       })
   }
   /*fetch background-image before mount*/
@@ -77,50 +88,13 @@ export default class App extends Component {
         if(!response.query.results) {
           return
         }
-
         const forecast = new ForecastViewModel(response);
 
         this.setState({
           forecast: forecast,
           isCelsius: true
         })
-
-        this.toggleTemperature(this.state.forecast.temperatures);
       })
-  }
-
-  /*get farenheit and transform in celsius*/
-  toCelsius(temperature) {
-    return Math.round(((parseFloat(temperature) - 32) * 5) / 9);
-  }
-
-  /*toggle temperatures*/
-  toggleTemperature(temperature) {
-    if(this.state.isCelsius) {
-      let today = this.toCelsius(temperature[0]); 
-      let tomorrow = this.toCelsius(temperature[1]);  
-      let afterTomorrow = this.toCelsius(temperature[2]); 
-
-      this.setState({
-        isCelsius: false,
-        today: today,
-        tomorrow: tomorrow,
-        afterTomorrow: afterTomorrow
-      })
-
-    } else {
-      let today = this.state.forecast.temperatures[0]; 
-      let tomorrow = this.state.forecast.temperatures[1];  
-      let afterTomorrow = this.state.forecast.temperatures[2]; 
-
-      this.setState({
-        isCelsius: true,
-        today: today,
-        tomorrow: tomorrow,
-        afterTomorrow: afterTomorrow
-      })
-      
-    }
   }
 
   render() {
@@ -128,7 +102,11 @@ export default class App extends Component {
     return (
       this.state.willMount ?
 
-      <div className="app" style={{background: `url(${this.state.image})`}}>
+      <div 
+        className="app"
+        id="app"
+        style={{background: `url(${this.state.image})`}}
+        ref={(app) => { this.app = app }}>
         <div className="main-box">
           <div className="search">
             <input 
@@ -143,34 +121,31 @@ export default class App extends Component {
               text={ `${forecast.location}, ${forecast.country}` }/>
           </div>
           <div className="forecast">
-        <div className={`container box-today ${ Utils.getClassName(this.toCelsius(forecast.temperatures[0])) }`}>
+        <div className={`container box-today ${ Utils.getClassName(forecast.maxToday) }`}>
           <div className="image-forecast">
             <img src={ `${Utils.getUrlImage(forecast.condition.toLowerCase())}` } />
           </div>
           <BoxForecast 
             data={ forecast }
             celsius={this.state.isCelsius}
-            today={this.state.today}
-            onClick={this.toggleTemperature.bind(this, forecast.temperatures)}/>
+            today={this.state.today}/>
 
         </div>
-        <div className={`container box-tommorrow ${ Utils.getClassName(this.toCelsius(forecast.temperatures[1])) }`}>
+        <div className={`container box-tommorrow ${ Utils.getClassName(forecast.maxTommorrow) }`}>
           <Text
             className="white box-forecast"
             text="Amanhã"/>
           <Text 
-            className="white temperatures" 
-            onClick={ this.toggleTemperature.bind(this, forecast.temperatures)}
-            text={ this.state.isCelsius ? `${this.state.tomorrow}ºF ` : `${this.state.tomorrow}ºC ` } />
+            className="white temperatures"
+            text={ `Máxima: ${forecast.maxTommorrow}ºC - Mínima: ${forecast.minTommorrow}ºC` } />
         </div>
-        <div className={`container box-after-tommorrow ${ Utils.getClassName(this.toCelsius(forecast.temperatures[2])) }`}>
+        <div className={`container box-after-tommorrow ${ Utils.getClassName(forecast.maxAfterTommorrow) }`}>
           <Text 
             className="white box-forecast"
             text="Depois de amanhã"/>
           <p 
-            className="white temperatures" 
-            onClick={ this.toggleTemperature.bind(this, forecast.temperatures)}>
-            { this.state.isCelsius ? `${this.state.afterTomorrow}ºF ` : `${this.state.afterTomorrow}ºC ` }
+            className="white temperatures">
+            { `Máxima: ${forecast.maxAfterTommorrow}ºC - Mínima: ${forecast.minAfterTommorrow}ºC` }
           </p>
         </div>
       </div>
