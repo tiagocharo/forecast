@@ -23,11 +23,10 @@ export default class App extends Component {
   }
 
   componentWillMount() {
-    this.fetchBackgroundPage();
+    // this.fetchBackgroundPage();
 
     /*verifiry localization*/
     if(navigator.geolocation) {
-      debugger;
       navigator.geolocation.getCurrentPosition(this.successFunction.bind(this));
     } else {
       alert('Parece que a Geolocalização, que é necessária para esta página, não está ativada no seu navegador.');
@@ -38,7 +37,6 @@ export default class App extends Component {
     if(this.state.willMount) {
       this.app.addEventListener('keydown', (event) => {
         if(event.keyCode === 13) {
-          console.log('enter')
           this.fetchForecast()
         }
       })
@@ -98,6 +96,34 @@ export default class App extends Component {
       })
   }
 
+  convertDayWeek(day) {
+    switch(day) {
+        case 'Mon':
+            return 'Segunda-Feira'
+            break
+        case 'Tue':
+            return 'Terça-Feira'
+            break
+        case 'Wed':
+            return 'Quarta-Feira'
+            break
+        case 'Thu':
+            return 'Quinta-Feira'
+            break
+        case 'Fri':
+            return 'Sexta-Feira'
+            break
+        case 'Sat':
+            return 'Sábado'
+            break
+        case 'Sun':
+            return 'Domingo'
+            break
+        default:
+            return ''
+    }
+  }
+
   render() {
     let { forecast } = this.state;
     return (
@@ -106,7 +132,7 @@ export default class App extends Component {
       <div 
         className="app"
         id="app"
-        style={{background: `url(${this.state.image})`}}
+        // style={{background: `url(${this.state.image})`}}
         ref={(app) => { this.app = app }}>
         <div className="main-box">
           <div className="search">
@@ -121,35 +147,105 @@ export default class App extends Component {
               className="text-location"
               text={ `${forecast.location}, ${forecast.country}` }/>
           </div>
-          <div className="forecast">
-        <div className={`container box-today ${ Utils.getClassName(forecast.maxToday) }`}>
-          <div className="image-forecast">
-            <img src={ `${Utils.getUrlImage(forecast.condition.toLowerCase())}` } />
-          </div>
-          <BoxForecast 
-            data={ forecast }
-            celsius={this.state.isCelsius}
-            today={this.state.today}/>
 
-        </div>
-        <div className={`container box-tommorrow ${ Utils.getClassName(forecast.maxTommorrow) }`}>
-          <Text
-            className="white box-forecast"
-            text="Amanhã"/>
-          <Text 
-            className="white temperatures"
-            text={ `Máxima: ${forecast.maxTommorrow}ºC | Mínima: ${forecast.minTommorrow}ºC` } />
-        </div>
-        <div className={`container box-after-tommorrow ${ Utils.getClassName(forecast.maxAfterTommorrow) }`}>
-          <Text 
-            className="white box-forecast"
-            text="Depois de amanhã"/>
-          <p 
-            className="white temperatures">
-            { `Máxima: ${forecast.maxAfterTommorrow}ºC | Mínima: ${forecast.minAfterTommorrow}ºC` }
-          </p>
-        </div>
-      </div>
+          <div className="forecast">
+            <div className={`container box-today ${ Utils.getClassName(forecast.maxOne) }`}>
+              <div className="image-forecast">
+                <img src={ `${Utils.getUrlImage(forecast.tempOne.toLowerCase())}` } />
+              </div>
+              <Text
+                className="white box-forecast"
+                text={this.convertDayWeek(forecast.dayOne)}/>
+              <Text 
+                className="white temperatures"
+                text={ `Máxima: ${forecast.maxOne}ºC | Mínima: ${forecast.minOne}ºC` } />
+            </div>
+          </div>
+
+          <div className="forecast">
+            <div className={`container box-today ${ Utils.getClassName(forecast.maxTwo) }`}>
+              <div className="image-forecast">
+                <img src={ `${Utils.getUrlImage(forecast.tempTwo.toLowerCase())}` } />
+              </div>
+              <Text
+                className="white box-forecast"
+                text={this.convertDayWeek(forecast.dayTwo)}/>
+              <Text 
+                className="white temperatures"
+                text={ `Máxima: ${forecast.maxTwo}ºC | Mínima: ${forecast.minTwo}ºC` } />
+            </div>
+          </div>
+          
+          <div className="forecast">
+            <div className={`container box-today ${ Utils.getClassName(forecast.maxThree) }`}>
+              <div className="image-forecast">
+                <img src={ `${Utils.getUrlImage(forecast.tempThree.toLowerCase())}` } />
+              </div>
+              <Text
+                className="white box-forecast"
+                text={this.convertDayWeek(forecast.dayThree)}/>
+              <Text 
+                className="white temperatures"
+                text={ `Máxima: ${forecast.maxThree}ºC | Mínima: ${forecast.minThree}ºC` } />
+            </div>
+          </div>
+
+          <div className="forecast">
+            <div className={`container box-today ${ Utils.getClassName(forecast.maxFour) }`}>
+              <div className="image-forecast">
+                <img src={ `${Utils.getUrlImage(forecast.tempFour.toLowerCase())}` } />
+              </div>
+              <Text
+                className="white box-forecast"
+                text={this.convertDayWeek(forecast.dayFour)}/>
+              <Text 
+                className="white temperatures"
+                text={ `Máxima: ${forecast.maxFour}ºC | Mínima: ${forecast.minFour}ºC` } />
+            </div>
+          </div>
+
+          <div className="forecast">
+            <div className={`container box-today ${ Utils.getClassName(forecast.maxFive) }`}>
+              <div className="image-forecast">
+                <img src={ `${Utils.getUrlImage(forecast.tempFive.toLowerCase())}` } />
+              </div>
+              <Text
+                className="white box-forecast"
+                text={this.convertDayWeek(forecast.dayFive)}/>
+              <Text 
+                className="white temperatures"
+                text={ `Máxima: ${forecast.maxFive}ºC | Mínima: ${forecast.minFive}ºC` } />
+            </div>
+          </div>
+          
+          <div className="forecast">
+            <div className={`container box-today ${ Utils.getClassName(forecast.maxSix) }`}>
+              <div className="image-forecast">
+                <img src={ `${Utils.getUrlImage(forecast.tempSix.toLowerCase())}` } />
+              </div>
+              <Text
+                className="white box-forecast"
+                text={this.convertDayWeek(forecast.daySix)}/>
+              <Text 
+                className="white temperatures"
+                text={ `Máxima: ${forecast.maxSix}ºC | Mínima: ${forecast.minSix}ºC` } />
+            </div>
+          </div>
+
+          <div className="forecast">
+            <div className={`container box-today ${ Utils.getClassName(forecast.maxSeven) }`}>
+              <div className="image-forecast">
+                <img src={ `${Utils.getUrlImage(forecast.tempSeven.toLowerCase())}` } />
+              </div>
+              <Text
+                className="white box-forecast"
+                text={this.convertDayWeek(forecast.daySeven)}/>
+              <Text 
+                className="white temperatures"
+                text={ `Máxima: ${forecast.maxSeven}ºC | Mínima: ${forecast.minSeven}ºC` } />
+            </div>
+          </div>
+          
         </div>
       </div> 
       :  
